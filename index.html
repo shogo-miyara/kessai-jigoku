@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>決裁地獄 - 商工会書類パズル</title>
+<style>
+:root{--ink:#2d3035;--cream:#f3efe3;--paper:#f8f5ec;--wall:#aab7c7;--desk:#75543c;--red:#b7342b;--shadow:rgba(31,34,39,.25)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#7f8fa4;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}button{font:inherit;touch-action:manipulation}
+.app{width:100%;height:100%;display:grid;grid-template-rows:56px 1fr 66px;background:linear-gradient(#98a8bc 0 72%,#70503a 72% 100%);position:relative;overflow:hidden}
+.app:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 25%,rgba(255,255,255,.18),transparent 48%),repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 2px,transparent 2px 9px);mix-blend-mode:soft-light}
+.top{position:relative;z-index:4;display:flex;align-items:center;gap:14px;padding:6px 14px;background:rgba(238,236,228,.93);border-bottom:1px solid rgba(42,44,48,.28);box-shadow:0 2px 10px rgba(0,0,0,.09)}
+.logo{font-weight:950;letter-spacing:.08em;font-size:20px;white-space:nowrap}.logo b{color:var(--red)}
+.hud{margin-left:auto;display:flex;align-items:center;gap:18px;font-variant-numeric:tabular-nums}.hudBlock{text-align:right;line-height:1.05}.hudBlock small{display:block;font-size:9px;letter-spacing:.14em;color:#71706b;font-weight:800}.hudBlock strong{font-size:19px}.full{width:42px;height:42px;border:1px solid #b8b5ad;border-radius:10px;background:#f7f5ef;font-size:19px;font-weight:900;cursor:pointer}.soundBtn{width:42px;height:42px;border:1px solid #b8b5ad;border-radius:10px;background:#f7f5ef;font-size:18px;font-weight:900;cursor:pointer}
+.rulesBtn{height:42px;border:1px solid #b8b5ad;border-radius:10px;background:#f7f5ef;padding:0 12px;font-size:12px;font-weight:900;cursor:pointer;white-space:nowrap}.narrowLabel{display:none}
+.gameoverTalk{display:flex;align-items:center;justify-content:center;gap:16px;margin:12px 0 16px}.gameoverTalk img{width:150px;height:150px;object-fit:contain;border-radius:16px;filter:drop-shadow(0 10px 16px rgba(0,0,0,.18))}.speech{position:relative;max-width:280px;padding:14px 16px;border:2px solid #4a4742;border-radius:14px;background:#fffdf6;font-size:18px;font-weight:900;line-height:1.45;text-align:left}.speech:before{content:"";position:absolute;left:-14px;top:42px;border-width:9px 14px 9px 0;border-style:solid;border-color:transparent #4a4742 transparent transparent}.speech:after{content:"";position:absolute;left:-10px;top:44px;border-width:7px 11px 7px 0;border-style:solid;border-color:transparent #fffdf6 transparent transparent}.speakerMeta{font-size:11px;color:#77716b;margin-top:-4px;margin-bottom:8px}
+.rulesPanel{width:min(680px,96%);max-height:88%;overflow:auto;text-align:left}.rulesPanel h2{margin:0 0 12px;text-align:center;font-size:28px}.stampList{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stampRow{display:grid;grid-template-columns:76px 1fr;gap:10px;align-items:center;padding:9px;border:1px solid #c8c3b8;border-radius:12px;background:#fffaf0}.stampRow img{width:76px;height:76px;object-fit:contain}.stampRow b{display:block;margin-bottom:3px}.stampRow p{margin:0;font-size:12px;line-height:1.45;color:#55514d}.rulesActions{text-align:center;margin-top:14px}
+.scene{position:relative;min-height:0;display:flex;align-items:center;justify-content:center;gap:22px;padding:8px 14px 4px;z-index:2}
+.decor{position:absolute;pointer-events:none;opacity:.95}.shelf{left:18px;top:8%;width:180px;height:70%;border:9px solid #54606f;background:#7c8999;border-radius:8px;box-shadow:0 14px 26px rgba(0,0,0,.18)}.shelf:before,.shelf:after{content:"";position:absolute;left:0;right:0;height:8px;background:#4d5866}.shelf:before{top:33%}.shelf:after{top:66%}.binder{position:absolute;bottom:5%;width:25px;border-radius:3px 3px 1px 1px;background:#4f6690;border:2px solid #303944}.b1{left:10px;height:88px}.b2{left:40px;height:104px;background:#ece5d5}.b3{left:70px;height:95px;background:#a46a56}.b4{left:100px;height:110px;background:#647c6d}.b5{left:130px;height:82px;background:#d2b16c}
+.memo{right:24px;top:8%;width:180px;height:115px;background:#ece8d8;border:1px solid #918e83;transform:rotate(1.5deg);box-shadow:0 8px 18px rgba(0,0,0,.14)}.memo:before{content:"";position:absolute;top:-8px;left:67px;width:46px;height:17px;background:rgba(210,190,135,.8);transform:rotate(-4deg)}
+.gameShell{position:relative;height:100%;max-height:930px;aspect-ratio:6/12;min-width:0;filter:drop-shadow(0 18px 20px rgba(0,0,0,.22))}
+.boardFrame{position:absolute;inset:0;border-radius:12px 12px 18px 18px;background:linear-gradient(90deg,#78808a 0 9px,#e7e2d7 9px calc(100% - 9px),#78808a calc(100% - 9px));border:3px solid #4c535c;overflow:hidden}
+.boardFrame:after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:15px;background:linear-gradient(#7d6b5b,#5b493a);border-radius:0 0 12px 12px;pointer-events:none}
+#board{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.side{height:min(88%,780px);width:190px;display:flex;flex-direction:column;align-items:stretch;gap:14px;z-index:3}
+.nextCard{background:rgba(238,236,228,.94);border:2px solid #656a70;border-radius:12px;padding:9px;box-shadow:0 10px 18px rgba(0,0,0,.12)}.nextCard small{display:block;text-align:center;font-size:10px;letter-spacing:.18em;font-weight:900;color:#6d6c68;margin-bottom:6px}.nextCard canvas{width:100%;aspect-ratio:1/1;display:block;border-radius:8px;background:#dce3eb}
+.senArea{position:relative;margin-top:10px;background:rgba(238,236,228,.96);border:2px solid #656a70;border-radius:14px;padding:8px 6px 10px;box-shadow:0 10px 18px rgba(0,0,0,.12);min-height:238px;overflow:visible}.senTitle{display:block;text-align:center;font-size:10px;letter-spacing:.15em;font-weight:900;color:#6d6c68;margin-bottom:4px}.senWrap{position:relative;height:208px;display:flex;align-items:flex-end;justify-content:center}.senWrap img{width:118px;max-width:100%;height:auto;filter:drop-shadow(0 9px 14px rgba(0,0,0,.18));animation:senBob 2.7s ease-in-out infinite;transform-origin:50% 100%}.senWrap.smile img{animation-duration:2.1s}.senBubble{position:absolute;right:68px;top:-4px;min-width:210px;max-width:290px;padding:11px 13px;border-radius:16px;background:rgba(255,248,238,.97);border:3px solid #3e4349;box-shadow:0 12px 26px rgba(0,0,0,.2);font-size:14px;font-weight:900;line-height:1.45;letter-spacing:.02em;transform:translateX(-6px) scale(.92);opacity:0;pointer-events:none;z-index:14}.senBubble.show{opacity:1;transform:translateX(-18px) scale(1)}.senBubble:after{content:"";position:absolute;right:20px;bottom:-16px;border:10px solid transparent;border-top-color:#3e4349}.senBubble:before{content:"";position:absolute;right:22px;bottom:-11px;border:8px solid transparent;border-top-color:rgba(255,248,238,.97);z-index:1}.senName{position:absolute;left:8px;bottom:8px;padding:4px 8px;border-radius:999px;background:#30343a;color:#fff;font-size:11px;font-weight:900;letter-spacing:.08em}.senHint{margin-top:5px;text-align:center;font-size:11px;color:#6b6761;font-weight:800;letter-spacing:.02em}.senHint b{color:#b7342b}@keyframes senBob{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-4px) rotate(-1.2deg)}}
+.chainBox{height:120px;display:flex;align-items:center;justify-content:center}.chainBadge{opacity:0;transform:scale(.7);font-weight:1000;font-size:36px;color:#fff;text-shadow:0 3px 0 #7a261e,0 5px 14px rgba(0,0,0,.3);transition:.12s}.chainBadge.show{opacity:1;transform:scale(1)}
+.controls{position:relative;z-index:5;display:flex;justify-content:center;gap:10px;align-items:center;padding:7px 12px 10px;background:rgba(234,230,220,.94);border-top:1px solid rgba(40,43,48,.25)}.ctrl{width:82px;height:48px;border:1px solid #aaa69b;border-radius:13px;background:#faf8f1;font-size:24px;font-weight:950;color:#333;box-shadow:0 3px 0 #8d887e;cursor:pointer}.ctrl:active{transform:translateY(2px);box-shadow:0 1px 0 #8d887e}.drop{background:#30343a;color:#fff;border-color:#30343a;box-shadow:0 3px 0 #141619}.rotate{background:#b7342b;color:#fff;border-color:#8f211b;box-shadow:0 3px 0 #6b1713}
+.fx{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;pointer-events:none}.fx img{width:min(72%,430px);max-height:72%;object-fit:contain;border-radius:18px;filter:drop-shadow(0 16px 24px rgba(0,0,0,.28));animation:fxpop .72s ease both}.fx.hidden{display:none}@keyframes fxpop{0%{transform:scale(.45);opacity:0}26%{transform:scale(1.08);opacity:1}75%{opacity:1}100%{transform:scale(.98);opacity:0}}
+.bonusPop{position:absolute;left:50%;top:18px;transform:translateX(-50%);z-index:16;width:min(78%,420px);display:flex;align-items:flex-end;gap:12px;padding:10px 12px;border-radius:18px;background:linear-gradient(180deg,rgba(255,250,240,.98),rgba(249,236,210,.96));border:3px solid rgba(92,73,39,.9);box-shadow:0 18px 38px rgba(0,0,0,.24);pointer-events:none;animation:bonusPopIn .28s ease both}.bonusPop.hidden{display:none}.bonusPop img{width:130px;max-width:34%;height:auto;flex:0 0 auto;filter:drop-shadow(0 9px 14px rgba(0,0,0,.16))}.bonusText{font-size:18px;font-weight:1000;line-height:1.45;color:#3b2f1d;text-shadow:0 1px 0 rgba(255,255,255,.45)}@keyframes bonusPopIn{0%{transform:translateX(-50%) translateY(-16px) scale(.92);opacity:0}100%{transform:translateX(-50%) translateY(0) scale(1);opacity:1}}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:7}.flash.on{animation:flash .28s ease}@keyframes flash{0%{opacity:.78}100%{opacity:0}}
+.busyBadge{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:10;pointer-events:none;display:flex;align-items:center;gap:9px;padding:8px 16px;border-radius:999px;background:rgba(154,31,25,.92);border:2px solid rgba(255,238,224,.82);color:#fff7eb;font-weight:1000;letter-spacing:.16em;font-size:20px;box-shadow:0 8px 24px rgba(96,15,12,.28);text-shadow:0 2px 0 rgba(90,10,8,.55);animation:busyPulse .8s ease-in-out infinite alternate}.busyBadge small{font-size:11px;letter-spacing:.08em;opacity:.9}.busyBadge.hidden{display:none}@keyframes busyPulse{from{transform:translateX(-50%) scale(.98)}to{transform:translateX(-50%) scale(1.03)}}
+.busyCut{position:absolute;inset:0;z-index:15;display:flex;align-items:center;justify-content:center;pointer-events:none;background:rgba(145,23,17,.12)}.busyCut.hidden{display:none}.busyCut span{display:block;padding:18px 34px;border:4px solid #fff2dc;border-radius:18px;background:rgba(164,34,26,.94);color:#fff6e8;font-weight:1000;font-size:clamp(42px,8vw,86px);letter-spacing:.18em;text-shadow:0 4px 0 #742019,0 10px 24px rgba(0,0,0,.28);box-shadow:0 18px 45px rgba(79,10,8,.35);animation:busyCut .95s ease both}@keyframes busyCut{0%{transform:scale(.55) rotate(-4deg);opacity:0}24%{transform:scale(1.08) rotate(1deg);opacity:1}72%{transform:scale(1);opacity:1}100%{transform:scale(.98);opacity:0}}
+.overlay{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(31,35,42,.76);padding:18px}.overlay.hidden{display:none}.panel{width:min(540px,92%);background:#f3efe4;border:3px solid #45494e;border-radius:18px;padding:26px;text-align:center;box-shadow:0 28px 60px rgba(0,0,0,.38)}.panel h1{font-size:clamp(32px,6vw,58px);margin:0 0 8px;letter-spacing:.06em}.panel p{margin:7px 0 20px;color:#5c5a55;line-height:1.6}.start{border:0;border-radius:12px;background:#30343a;color:#fff;padding:13px 28px;font-size:20px;font-weight:900;cursor:pointer}.result{font-size:22px;font-weight:900;margin:12px 0 18px}
+@media(max-width:900px){.decor{display:none}.scene{gap:9px;padding:5px}.side{width:116px}.nextCard{padding:5px}.chainBadge{font-size:26px}.logo{font-size:16px}.hud{gap:9px}.hudBlock strong{font-size:16px}.gameShell{max-height:100%}.ctrl{width:60px}.senArea{min-height:190px}.senWrap{height:170px}.senWrap img{width:92px}.senBubble{min-width:160px;max-width:220px;font-size:12px;right:48px}.bonusPop{width:min(86%,340px);padding:8px 10px;gap:8px}.bonusText{font-size:15px}}
+@media(max-width:600px){.app{grid-template-rows:48px 1fr 58px}.rulesBtn{width:36px;padding:0;font-size:18px}.soundBtn{width:36px;height:36px;font-size:16px}.wideLabel{display:none}.narrowLabel{display:inline}.gameoverTalk{gap:8px}.gameoverTalk img{width:112px;height:112px}.speech{font-size:14px;padding:10px}.stampList{grid-template-columns:1fr}.rulesPanel{padding:18px}.top{padding:4px 7px}.logo{font-size:13px;letter-spacing:.03em}.hudBlock:nth-child(2){display:none}.full{width:36px;height:36px}.scene{gap:4px;padding:3px}.side{width:84px}.nextCard small{font-size:8px}.chainBox{height:75px}.chainBadge{font-size:20px}.ctrl{width:60px;height:42px;font-size:20px}.boardFrame{border-width:2px}.bonusPop{top:8px;width:min(92%,300px);padding:7px 8px;gap:6px;border-width:2px}.bonusPop img{width:92px}.bonusText{font-size:13px}}
+
+/* v10: 商工会の事務所らしい「相談窓口・掲示物・ファイル棚」の空気を追加 */
+.top{background:linear-gradient(180deg,rgba(247,245,236,.98),rgba(232,235,229,.96));border-bottom:3px solid #345f73}
+.officeBrand{display:flex;align-items:center;gap:9px;min-width:0}.shokoBadge{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#345f73;color:#fff;border:3px double #e8efe9;font-family:serif;font-weight:1000;font-size:19px;box-shadow:0 2px 0 rgba(0,0,0,.12)}
+.orgLabel{display:flex;flex-direction:column;font-size:11px;line-height:1.05;font-weight:900;letter-spacing:.08em;color:#35505b;white-space:nowrap}.orgLabel em{font-style:normal;font-size:8px;color:#79827c;letter-spacing:.14em;margin-top:3px}.gameTitle{font-weight:1000;font-size:19px;letter-spacing:.07em;white-space:nowrap;border-left:1px solid #b9c1ba;padding-left:10px}.gameTitle b{color:var(--red)}
+.consultBoard{left:16px;bottom:7%;top:auto;width:184px;height:auto;background:#f4f0df;border:5px solid #6a786f;border-radius:4px;box-shadow:0 12px 22px rgba(0,0,0,.16);padding:10px 11px;color:#34473f;transform:rotate(-.7deg)}.consultBoard:before{content:"";position:absolute;left:72px;top:-12px;width:42px;height:19px;background:rgba(214,194,133,.86);transform:rotate(2deg)}.consultHead{font-size:18px;font-weight:1000;border-bottom:3px double #597568;padding-bottom:5px;margin-bottom:7px;text-align:center}.consultItems{font-size:11px;line-height:1.8;font-weight:900;letter-spacing:.08em}.consultFoot{margin-top:7px;padding-top:6px;border-top:1px dashed #9c9b8f;font-size:9px;text-align:center;color:#75736d}
+.memo{padding:16px 12px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#333}.memoTitle{font-size:9px;font-weight:900;letter-spacing:.18em;color:#6e6b63;margin-bottom:7px}.memoSlogan{font-size:18px;line-height:1.35;font-weight:1000;letter-spacing:.02em}.memoStamp{margin-top:7px;border:2px solid #a43c33;color:#a43c33;padding:2px 7px;font-size:9px;font-weight:1000;transform:rotate(-5deg)}
+.boardFrame{border-color:#415965;box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
+.nextCard{position:relative;background:linear-gradient(#f6f3e9,#e7e9e4);border-color:#53666e}.nextCard:before{content:"未処理トレー";display:block;text-align:center;font-size:9px;font-weight:1000;letter-spacing:.12em;color:#4c5b61;margin-bottom:3px}.nextCard small{color:#8a5149}
+.shokoNotice{background:#f4f0df;border:2px solid #7a8179;border-radius:4px;padding:9px 9px 10px;box-shadow:0 8px 16px rgba(0,0,0,.1);text-align:center;transform:rotate(.5deg)}.shokoNotice b{display:block;font-size:9px;letter-spacing:.14em;color:#657069;margin-bottom:6px}.shokoNotice span{display:block;font-weight:1000;font-size:14px;line-height:1.35;color:#2f3132}.shokoNotice:after{content:"商工会 業務標語";display:inline-block;margin-top:7px;border:1px solid #9b3c35;color:#9b3c35;padding:1px 5px;font-size:7px;font-weight:900;transform:rotate(-3deg)}
+.controls{background:linear-gradient(180deg,#e7e7df,#d3c8b8);border-top:4px solid #6d4e38;box-shadow:inset 0 2px rgba(255,255,255,.45)}.ctrl{border-radius:6px;background:#f6f3e9;border-color:#878b84;box-shadow:0 3px 0 #746e63}.drop{background:#345f73;border-color:#294a59;box-shadow:0 3px 0 #1d3540}
+@media(max-width:900px){.officeBrand .orgLabel{display:none}.gameTitle{border-left:0;padding-left:0}.shokoNotice{padding:6px}.shokoNotice span{font-size:11px}.shokoNotice b,.shokoNotice:after{display:none}}
+@media(max-width:600px){.shokoBadge{width:29px;height:29px;font-size:14px;border-width:2px}.gameTitle{font-size:12px}.officeBrand{gap:5px}.shokoNotice{display:none}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="top">
+    <div class="officeBrand"><span class="shokoBadge">商</span><span class="orgLabel">地域商工会<em>経営支援・業務処理室</em></span><span class="gameTitle"><b>決裁</b>地獄</span></div>
+    <div class="hud">
+      <div class="hudBlock"><small>SCORE</small><strong id="score">0</strong></div>
+      <div class="hudBlock"><small>処理</small><strong id="processed">0</strong></div>
+      <div class="hudBlock"><small>LV</small><strong id="level">1</strong></div>
+    </div>
+    <button class="rulesBtn" id="rulesBtn" type="button"><span class="wideLabel">スタンプ効果</span><span class="narrowLabel">印</span></button>
+    <button class="soundBtn" id="soundBtn" type="button" aria-label="音のオンオフ" title="音のオンオフ">🔊</button>
+    <button class="full" id="fullBtn" type="button" aria-label="全画面">⛶</button>
+  </div>
+  <div class="scene" id="scene">
+    <div class="decor shelf"><span class="binder b1"></span><span class="binder b2"></span><span class="binder b3"></span><span class="binder b4"></span><span class="binder b5"></span></div>
+    <div class="decor memo"><div class="memoTitle">今月の重点標語</div><div class="memoSlogan">組織は変わらないことが一番</div><div class="memoStamp">掲示</div></div><div class="decor consultBoard"><div class="consultHead">経営相談窓口</div><div class="consultItems">融資相談　　補助金<br>記帳・税務　創業相談<br>販路開拓　　経営計画</div><div class="consultFoot">事業者のみなさまを支援します</div></div>
+    <div class="gameShell" id="gameShell">
+      <div class="boardFrame"><canvas id="board"></canvas></div>
+      <div class="flash" id="flash"></div>
+      <div class="busyBadge hidden" id="busyBadge">繁忙期 <small>速度×2</small></div>
+      <div class="busyCut hidden" id="busyCut"><span>繁忙期</span></div>
+      <div class="fx hidden" id="fx"><img id="fxImg" alt=""></div><div class="bonusPop hidden" id="bonusPop"><img id="bonusImg" alt="ボーナス"><div class="bonusText" id="bonusText"></div></div>
+      <div class="overlay" id="startOv"><div class="panel"><h1>決裁地獄</h1><p>同じ書類を4つつなげて処理。特殊スタンプは定期的に降ってくる。<br><strong>回転できます。</strong> ↑キー / 回転ボタンで向きを変えられます。<br>でも専ちゃんが横からいろいろ言ってきます。仕事なので。</p><button class="start" id="startBtn" type="button">開始</button></div></div>
+      <div class="overlay hidden" id="gameOv"><div class="panel"><h1>業務終了</h1><div class="gameoverTalk"><img id="gameOverStamp" alt=""><div class="speech" id="gameOverLine"></div></div><div class="speakerMeta" id="speakerMeta"></div><div class="result" id="result"></div><button class="start" id="retryBtn" type="button">もう一度</button></div></div>
+      <div class="overlay hidden" id="rulesOv"><div class="panel rulesPanel"><h2>スタンプ効果</h2><div class="stampList" id="stampList"></div><div class="rulesActions"><button class="start" id="closeRulesBtn" type="button">閉じる</button></div></div></div>
+    </div>
+    <aside class="side"><div class="nextCard"><small>NEXT</small><canvas id="next" width="260" height="260"></canvas></div><div class="senArea"><small class="senTitle">専務の専ちゃん</small><div class="senWrap" id="senWrap"><div class="senBubble" id="senSpeech"></div><img id="senImg" alt="専務の専ちゃん"><div class="senName">専ちゃん</div></div><div class="senHint"><b>↑回転</b>　専ちゃんはたまに余計なことを言います</div></div><div class="shokoNotice"><b>今月の重点標語</b><span>組織は変わらないことが一番</span></div><div class="chainBox"><div class="chainBadge" id="chainBadge"></div></div></aside>
+  </div>
+  <div class="controls">
+    <button class="ctrl" id="left" type="button" aria-label="左">◀</button>
+    <button class="ctrl rotate" id="rotate" type="button" aria-label="回転">↻</button>
+    <button class="ctrl" id="down" type="button" aria-label="下">▼</button>
+    <button class="ctrl drop" id="drop" type="button" aria-label="一気に落とす">⇩</button>
+    <button class="ctrl" id="right" type="button" aria-label="右">▶</button>
+  </div>
+</div>
+<script>
+(()=>{'use strict';
+const DOC_VARIANTS=[["assets/img_001_dd2710392a971aa4.webp", "assets/img_002_f57f4eaa43fe78ba.webp", "assets/img_003_90c8633d15096cfc.webp"], ["assets/img_004_283c0b1e2702e33b.webp", "assets/img_005_8ce5b450c0b339d7.webp", "assets/img_006_c42def56c7f8ed8c.webp"], ["assets/img_007_8d3ddccdc9ac6cac.webp", "assets/img_008_68db5fe9b3a70076.webp", "assets/img_009_9fc8597e2baf2b70.webp"], ["assets/img_010_f07e66e6601f8231.webp", "assets/img_011_f3ccca57ff9e2392.webp", "assets/img_012_7d8618a22a42ae9e.webp"], ["assets/img_013_cbe3ed24ef008f89.webp", "assets/img_014_bb6093b17f2c4055.webp", "assets/img_015_4f4e0fa0240e3ffd.webp"]];
+const SPECIAL_IMGS={"決裁": "assets/img_016_25e35e6de21cb0ab.webp", "保留": "assets/img_017_70a97e415d938774.webp", "却下": "assets/img_018_6a687171810a513b.webp", "知らん": "assets/img_019_a48ca14de1f02160.webp", "俺は知らない": "assets/img_020_b75d87f6300df2c9.webp", "……": "assets/img_021_b508d59d3411117d.webp", "おつかれ": "assets/img_022_f9fb3de0acf31bdc.webp"};
+const CAT_NAMES=['稟議','書類','資料','至急','報告'];
+const SEN_SPRITES={front:"assets/img_023_f1820edbb21b6629.png",left:"assets/img_024_1dc43899357bb11c.png",right:"assets/img_025_bc35c6ce9a2da235.png",smile:"assets/img_026_6107819c25d82f76.png"};
+const BONUS_IMGS=["assets/img_027_3e68d2b9eaa6e278.png", "assets/img_028_303b43d99a0a79f6.png", "assets/img_029_76bbb1936684bddd.png", "assets/img_030_942491e6320bc57c.png", "assets/img_031_2b7cb1e89dc271eb.png"];
+const BONUS_LINES=["ここまで来たなら、もう本物でしょ。", "今日は珍しく、かなりいい。", "自己ベスト更新。やればできるんだ。", "処理、速いじゃん。甘いものでも食べな。", "その調子。そのまま積んで、ちゃんと捌いて。", "専ちゃんから臨時ボーナス。ちょっとだけ褒める。"];
+const BEST_KEY="kessai_jigoku_best_v13";
+const PAIR_ROT_OFFS=[[[0,0],[0,1]],[[0,0],[1,0]],[[0,0],[0,-1]],[[0,0],[-1,0]]];
+const COLS=6,ROWS=12;
+const canvas=document.getElementById('board'),ctx=canvas.getContext('2d');
+const next=document.getElementById('next'),nctx=next.getContext('2d');
+const shell=document.getElementById('gameShell');
+const scoreEl=document.getElementById('score'),processedEl=document.getElementById('processed'),levelEl=document.getElementById('level');
+const busyBadge=document.getElementById('busyBadge'),busyCut=document.getElementById('busyCut');
+const startOv=document.getElementById('startOv'),gameOv=document.getElementById('gameOv'),result=document.getElementById('result');
+const rulesOv=document.getElementById('rulesOv'),stampList=document.getElementById('stampList'),gameOverStamp=document.getElementById('gameOverStamp'),gameOverLine=document.getElementById('gameOverLine'),speakerMeta=document.getElementById('speakerMeta');
+const fx=document.getElementById('fx'),fxImg=document.getElementById('fxImg'),flash=document.getElementById('flash'),chainBadge=document.getElementById('chainBadge');
+const bonusPop=document.getElementById('bonusPop'),bonusImg=document.getElementById('bonusImg'),bonusText=document.getElementById('bonusText');
+const senWrap=document.getElementById('senWrap'),senImg=document.getElementById('senImg'),senSpeech=document.getElementById('senSpeech'),rotateBtn=document.getElementById('rotate');
+const IMG={};
+function load(src){if(!IMG[src]){const im=new Image();im.src=src;IMG[src]=im;}return IMG[src]}
+for(const g of DOC_VARIANTS)for(const src of g)load(src);for(const src of Object.values(SPECIAL_IMGS))load(src);for(const src of Object.values(SEN_SPRITES))load(src);for(const src of BONUS_IMGS)load(src);
+let dpr=1,cw=60,ch=60,ox=0,oy=0;
+let board=[],current=null,nextPiece=null,running=false,phase='idle',phaseUntil=0,phaseData=null,last=performance.now(),fallProgress=0;
+let score=0,processed=0,placed=0,level=1,slowUntil=0,chain=0,piecesSinceSpecial=0,specialGap=3+rand(3);
+let gameStartedAt=0,busyActive=false,lastSpecialType=null,lastSpecialAt=0,rulesPausedAt=0;
+let bestScore=0,bonusNextAt=1,bonusUntil=0;try{bestScore=Math.max(0,parseInt(localStorage.getItem(BEST_KEY)||'0',10)||0);bonusNextAt=bestScore+1}catch(e){bestScore=0;bonusNextAt=1}
+let senNextTalkAt=0,senTalkUntil=0,senSmileUntil=0,senCurrentMood='front';
+let specialCounts={'決裁':0,'保留':0,'却下':0,'知らん':0,'俺は知らない':0,'……':0,'おつかれ':0};
+let audioCtx=null,audioMaster=null,musicGain=null,sfxGain=null,audioComp=null,musicTimer=null,musicStep=0,nextNoteTime=0,soundOn=true;
+const soundBtn=document.getElementById('soundBtn');
+function ensureAudio(){
+  if(!soundOn)return null;
+  if(!audioCtx){
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
+    audioCtx=new AC();audioMaster=audioCtx.createGain();musicGain=audioCtx.createGain();sfxGain=audioCtx.createGain();audioComp=audioCtx.createDynamicsCompressor();
+    // v9: 全体をかなり前に出す。コンプレッサーでSEが強くても破綻しにくくする。
+    audioMaster.gain.value=.96;musicGain.gain.value=.38;sfxGain.gain.value=.90;
+    audioComp.threshold.value=-18;audioComp.knee.value=16;audioComp.ratio.value=6;audioComp.attack.value=.003;audioComp.release.value=.18;
+    musicGain.connect(audioMaster);sfxGain.connect(audioMaster);audioMaster.connect(audioComp);audioComp.connect(audioCtx.destination);
+    musicTimer=setInterval(scheduleMusic,50);
+  }
+  if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+  return audioCtx;
+}
+function midi(n){return 440*Math.pow(2,(n-69)/12)}
+function tone(freq,dur=.08,type='square',vol=.08,when=null,dest=null,slideTo=null){
+  const ac=audioCtx;if(!ac||!soundOn)return;const t=when??ac.currentTime;
+  const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.setValueAtTime(Math.max(30,freq),t);
+  if(slideTo)o.frequency.exponentialRampToValueAtTime(Math.max(30,slideTo),t+dur);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,vol),t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g);g.connect(dest||sfxGain);o.start(t);o.stop(t+dur+.025);
+}
+function noise(dur=.06,vol=.08,when=null,bright=true,dest=null){
+  const ac=audioCtx;if(!ac||!soundOn)return;const t=when??ac.currentTime,n=Math.max(1,Math.floor(ac.sampleRate*dur)),buf=ac.createBuffer(1,n,ac.sampleRate),d=buf.getChannelData(0);
+  for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n);
+  const src=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();src.buffer=buf;f.type=bright?'highpass':'lowpass';f.frequency.value=bright?1250:520;g.gain.value=vol;src.connect(f);f.connect(g);g.connect(dest||sfxGain);src.start(t);
+}
+function kick(when,vol=.11,dest=musicGain){
+  const ac=audioCtx;if(!ac||!soundOn)return;const t=when??ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(48,t+.12);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+.14);o.connect(g);g.connect(dest);o.start(t);o.stop(t+.15);
+}
+function clap(when,vol=.045,dest=musicGain){noise(.055,vol,when,true,dest);noise(.035,vol*.55,(when??audioCtx.currentTime)+.028,true,dest)}
+const melody=[0,2,4,2,7,4,2,0,0,2,5,4,2,-1,0,2];
+const bass=[0,null,null,null,5,null,null,null,3,null,null,null,4,null,null,null];
+const arp=[0,4,7,11,7,4,2,7,0,5,9,12,9,5,4,7];
+function scheduleMusic(){
+  if(!audioCtx||!soundOn)return;
+  if(!running||!rulesOv.classList.contains('hidden')){nextNoteTime=audioCtx.currentTime+.06;return;}
+  if(nextNoteTime<audioCtx.currentTime-.2)nextNoteTime=audioCtx.currentTime+.04;
+  while(nextNoteTime<audioCtx.currentTime+.16){
+    const busy=busyActive, bpm=(busy?188:118+Math.min(28,(level-1)*1.7)),stepDur=60/bpm/2;
+    const st=musicStep%16,root=busy?62:60;
+    // 主旋律：以前より太く、1オクターブ下を薄く重ねる
+    tone(midi(root+melody[st]),Math.min(.13,stepDur*.82),'square',busy?.056:.044,nextNoteTime,musicGain);
+    if(st%2===0)tone(midi(root-12+melody[st]),Math.min(.11,stepDur*.68),'triangle',busy?.026:.020,nextNoteTime,musicGain);
+    // ベース
+    if(bass[st]!=null){tone(midi(43+bass[st]),Math.min(.22,stepDur*1.25),'sawtooth',busy?.052:.040,nextNoteTime,musicGain);tone(midi(31+bass[st]),.15,'sine',busy?.040:.030,nextNoteTime,musicGain);}
+    // 高音アルペジオでBGMの密度を上げる
+    tone(midi(root+12+arp[st]),Math.min(.07,stepDur*.45),'square',busy?.028:.017,nextNoteTime,musicGain);
+    // ドラム：通常でも明確、繁忙期は倍密度
+    if(st%4===0)kick(nextNoteTime,busy?.15:.12,musicGain);
+    if(st%8===4)clap(nextNoteTime,busy?.075:.052,musicGain);
+    if(st%2===1)noise(.018,busy?.030:.017,nextNoteTime,true,musicGain);
+    if(busy&&st%2===0)noise(.014,.020,nextNoteTime+.015,true,musicGain);
+    musicStep=(musicStep+1)%16;nextNoteTime+=stepDur;
+  }
+}
+function resetMusicClock(){if(!ensureAudio())return;musicStep=0;nextNoteTime=audioCtx.currentTime+.08}
+function sfxLand(){if(!ensureAudio())return;const t=audioCtx.currentTime;noise(.065,.12,t,false);tone(155,.075,'triangle',.12,t,sfxGain,78);tone(78,.09,'sine',.09,t+.01)}
+function sfxClear(chainNo=1,count=4){if(!ensureAudio())return;const t=audioCtx.currentTime,base=64+Math.min(15,(chainNo-1)*3);noise(.035,.055,t,true);tone(midi(base),.11,'square',.15,t);tone(midi(base+4),.12,'square',.14,t+.055);tone(midi(base+7),.15,'square',.13,t+.11);tone(midi(base+12),.20,'triangle',.11,t+.18);if(count>=8){noise(.08,.11,t+.18,true);tone(midi(base+19),.24,'sawtooth',.10,t+.22)}}
+function sfxBusy(on){if(!ensureAudio())return;const t=audioCtx.currentTime;if(on){noise(.14,.12,t,true);tone(330,.16,'square',.16,t,sfxGain,760);tone(660,.18,'square',.15,t+.12,sfxGain,1100);tone(990,.22,'sawtooth',.12,t+.25,sfxGain,1450)}else{tone(620,.12,'square',.09,t,sfxGain,420);tone(420,.18,'triangle',.08,t+.10,sfxGain,250)}}
+function sfxSpecial(type){if(!ensureAudio())return;const t=audioCtx.currentTime;
+  if(type==='決裁'){
+    // v11: 決裁だけは「押した」瞬間が分かるように、低音の衝撃＋木質クリック＋短い勝利和音を重ねる。
+    noise(.16,.36,t,false);noise(.055,.22,t+.012,true);kick(t,.38,sfxGain);
+    tone(76,.30,'sawtooth',.30,t,sfxGain,42);tone(155,.18,'square',.18,t+.018,sfxGain,82);
+    tone(520,.07,'square',.13,t+.055);tone(780,.09,'square',.15,t+.105);tone(1040,.12,'square',.14,t+.155);
+    tone(659,.24,'triangle',.12,t+.19);tone(831,.26,'triangle',.115,t+.205);tone(1047,.30,'triangle',.11,t+.22);
+    noise(.08,.16,t+.19,true);
+  }
+  else if(type==='保留'){tone(980,.16,'square',.12,t);tone(730,.18,'square',.11,t+.11);tone(490,.22,'triangle',.09,t+.22)}
+  else if(type==='却下'){noise(.09,.22,t,true);tone(240,.10,'square',.17,t,sfxGain,88);tone(120,.13,'sawtooth',.13,t+.045,sfxGain,60)}
+  else if(type==='知らん'){noise(.38,.30,t,true);kick(t,.30,sfxGain);tone(980,.18,'sawtooth',.15,t,sfxGain,210);tone(420,.24,'square',.13,t+.10,sfxGain,110);noise(.16,.18,t+.17,false)}
+  else if(type==='俺は知らない'){tone(190,.30,'sawtooth',.14,t,sfxGain,720);tone(720,.14,'square',.10,t+.04,sfxGain,260);noise(.08,.11,t+.09,true)}
+  else if(type==='……'){tone(145,.52,'sine',.14,t,sfxGain,78);tone(92,.56,'triangle',.10,t+.08);noise(.18,.075,t+.05,false)}
+  else if(type==='おつかれ'){tone(784,.12,'sine',.10,t);tone(988,.14,'sine',.095,t+.09);tone(1175,.20,'sine',.09,t+.19);tone(1568,.24,'triangle',.07,t+.30);noise(.035,.045,t+.02,false)}
+}
+function sfxGameOver(){if(!ensureAudio())return;const t=audioCtx.currentTime;noise(.18,.14,t,false);kick(t,.20,sfxGain);tone(440,.22,'square',.12,t);tone(330,.26,'square',.115,t+.17);tone(247,.32,'sawtooth',.11,t+.36);tone(123,.55,'triangle',.13,t+.58)}
+function toggleSound(){
+  soundOn=!soundOn;soundBtn.textContent=soundOn?'🔊':'🔇';soundBtn.setAttribute('aria-label',soundOn?'音をオフ':'音をオン');
+  if(soundOn){ensureAudio();if(audioMaster)audioMaster.gain.setTargetAtTime(.96,audioCtx.currentTime,.02);nextNoteTime=audioCtx.currentTime+.04}
+  else if(audioMaster&&audioCtx)audioMaster.gain.setTargetAtTime(.0001,audioCtx.currentTime,.02);
+}
+
+function emptyBoard(){return Array.from({length:ROWS},()=>Array(COLS).fill(null))}
+function resize(){const r=canvas.getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);canvas.width=Math.max(1,Math.round(r.width*dpr));canvas.height=Math.max(1,Math.round(r.height*dpr));cw=r.width/COLS;ch=r.height/ROWS;ox=0;oy=0}
+new ResizeObserver(resize).observe(canvas);resize();
+function rand(n){return Math.floor(Math.random()*n)}
+function showBonusPraise(){const line=BONUS_LINES[rand(BONUS_LINES.length)],src=BONUS_IMGS[rand(BONUS_IMGS.length)];bonusImg.src=src;bonusText.textContent=line;bonusPop.classList.remove('hidden');bonusUntil=performance.now()+3200;senSmileUntil=Math.max(senSmileUntil,performance.now()+1600);setSenTalk(line,2600,true)}
+function updateBonus(now){if(now>=bonusUntil)bonusPop.classList.add('hidden')}
+function syncBestBonus(){if(level<8||score<=bestScore)return;bestScore=score;try{localStorage.setItem(BEST_KEY,String(bestScore))}catch(e){}if(score>=bonusNextAt){showBonusPraise();bonusNextAt=score+1800}}
+function nuisanceBoost(){return 1+Math.min(2.8,(level-1)*.12)}
+function weighted(items){let total=items.reduce((s,x)=>s+x.w,0),r=Math.random()*total;for(const x of items){r-=x.w;if(r<=0)return x.v}return items.at(-1).v}
+function makeDocCell(cat=rand(5)){return{kind:'doc',cat,variant:rand(3),freezeUntil:0,animX:null,animY:null,animStart:0,clearStart:0,clearing:false}}
+function makeSpecialPiece(){
+  const nb=nuisanceBoost();
+  const type=weighted([
+    {v:'決裁',w:4.8},{v:'保留',w:2.4*nb},{v:'却下',w:2.8},{v:'知らん',w:1.8*nb},{v:'俺は知らない',w:1.35*nb},{v:'……',w:1.15*nb},{v:'おつかれ',w:1.5}
+  ]);
+  return{kind:'special',type,x:2,y:-1,renderX:2,renderY:-1,dir:Math.random()<.5?-1:1};
+}
+function makePiece(){
+  if(piecesSinceSpecial>=specialGap){
+    piecesSinceSpecial=0;
+    specialGap=4+rand(3);
+    return makeSpecialPiece();
+  }
+  piecesSinceSpecial++;
+  return{kind:'pair',cells:[makeDocCell(),makeDocCell()],x:2,y:-2,renderX:2,renderY:-2,rot:0};
+}
+
+function pairOffsets(rot){return PAIR_ROT_OFFS[((rot%4)+4)%4]}
+function pairCells(p,x=p.x,y=p.y,rot=p.rot){const offs=pairOffsets(rot);return[{cell:p.cells[0],x:x+offs[0][0],y:y+offs[0][1]},{cell:p.cells[1],x:x+offs[1][0],y:y+offs[1][1]}]}
+function pairCenterX(p){const cells=pairCells(p);return (cells[0].x+cells[1].x)/2}
+function collidesPiece(p,x=p.x,y=p.y,rot=p.rot){if(p.kind==='pair'){
+  for(const it of pairCells(p,x,y,rot)){const xx=it.x,yy=it.y;if(xx<0||xx>=COLS||yy>=ROWS)return true;if(yy>=0&&board[yy][xx])return true}
+}else{if(x<0||x>=COLS||y>=ROWS)return true;if(y>=0&&board[y][x])return true}return false}
+function spawn(){if(!running)return;current=nextPiece||makePiece();nextPiece=makePiece();fallProgress=0;current.x=2;current.renderX=2;current.y=current.kind==='pair'?-2:-1;current.renderY=current.y;if(current.kind==='special')specialCounts[current.type]=(specialCounts[current.type]||0)+1;drawNext();if(collidesPiece(current,current.x,current.y+1)&&current.y<0){gameOver();}}
+function dropMs(){return 760}
+function timeSpeedMul(now){if(!gameStartedAt)return 1;const elapsed=Math.max(0,now-gameStartedAt);return Math.pow(1.08,elapsed/30000)}
+function updateLevel(now){if(!gameStartedAt)return;const lv=1+Math.floor(Math.max(0,now-gameStartedAt)/30000);if(lv!==level){level=lv;levelEl.textContent=level}}
+function isBusy(now){if(!gameStartedAt)return false;const elapsed=now-gameStartedAt;if(elapsed<60000)return false;return ((elapsed-60000)%60000)<30000}
+function updateBusy(now){const on=isBusy(now);if(on===busyActive)return;busyActive=on;busyBadge.classList.toggle('hidden',!on);sfxBusy(on);if(on){busyCut.classList.remove('hidden');setTimeout(()=>busyCut.classList.add('hidden'),950);setSenTalk('繁忙期ね。じゃあ、倍速で。',2500,false);senNextTalkAt=now+7000}else{busyCut.classList.add('hidden')}}
+function move(dx){if(!running||phase!=='falling'||!current)return;const nx=current.x+dx;if(!collidesPiece(current,nx,current.y))current.x=nx}
+function rotateCurrent(dir=1){if(!running||phase!=='falling'||!current||current.kind!=='pair')return;const nr=(current.rot+dir+4)%4;const kicks=[[0,0],[1,0],[-1,0],[0,-1],[2,0],[-2,0]];for(const [kx,ky] of kicks){const nx=current.x+kx,ny=current.y+ky;if(!collidesPiece(current,nx,ny,nr)){current.rot=nr;current.x=nx;current.y=ny;return}}}
+function softDrop(){if(!running||phase!=='falling'||!current)return;if(!collidesPiece(current,current.x,current.y+1)){current.y++;fallProgress=0;score+=1;scoreEl.textContent=score}else lockCurrent(performance.now())}
+function hardDrop(){if(!running||phase!=='falling'||!current)return;let y=current.y;while(!collidesPiece(current,current.x,y+1))y++;current.y=y;current.renderY=Math.min(current.renderY,y-.18);score+=Math.max(0,Math.round((y-current.renderY)*2));lockCurrent(performance.now())}
+function addCell(x,y,c){if(y<0){gameOver();return false}board[y][x]=c;return true}
+function lockCurrent(now){if(!current)return;const p=current;current=null;fallProgress=0;if(p.kind==='pair'){
+  const cells=pairCells(p);
+  if(!addCell(cells[0].x,cells[0].y,cells[0].cell))return;
+  if(!addCell(cells[1].x,cells[1].y,cells[1].cell))return;
+  placed+=2;score+=10;updateHUD();sfxLand();gravity(now);phase='gravity';phaseUntil=now+180;chain=0;
+}else resolveSpecial(p,now)}
+function updateHUD(){scoreEl.textContent=score;processedEl.textContent=processed;levelEl.textContent=level;syncBestBonus()}
+function neighbors(x,y){return [[x+1,y],[x-1,y],[x,y+1],[x,y-1]].filter(([a,b])=>a>=0&&a<COLS&&b>=0&&b<ROWS)}
+function connectedFrom(x,y,allowSmall=true){const c=board[y]?.[x];if(!c||c.kind!=='doc')return[];const now=performance.now();if(c.freezeUntil>now)return[];const cat=c.cat,seen=new Set(),stack=[[x,y]],out=[];while(stack.length){const [cx,cy]=stack.pop(),key=cx+','+cy;if(seen.has(key))continue;seen.add(key);const cc=board[cy]?.[cx];if(!cc||cc.kind!=='doc'||cc.cat!==cat||cc.freezeUntil>now)continue;out.push([cx,cy]);for(const n of neighbors(cx,cy))stack.push(n)}return out}
+function findGroups(){const now=performance.now(),seen=new Set(),groups=[];for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const key=x+','+y,c=board[y][x];if(seen.has(key)||!c||c.kind!=='doc'||c.freezeUntil>now)continue;const g=connectedFrom(x,y);for(const [gx,gy]of g)seen.add(gx+','+gy);if(g.length>=4)groups.push(g)}return groups}
+function markClear(groups,now,chainNo){let count=0;for(const g of groups)for(const [x,y]of g){const c=board[y][x];if(c&&!c.clearing){c.clearing=true;c.clearStart=now;count++}}if(count){phase='clear';phaseUntil=now+260;phaseData={count,chainNo};showChain(chainNo);sfxClear(chainNo,count)}return count}
+function beginResolve(now,chainNo){const groups=findGroups();if(groups.length){markClear(groups,now,chainNo)}else{chain=0;phase='falling';checkTop();spawn()}}
+function removeClearing(now){let count=0;for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const c=board[y][x];if(c?.clearing){board[y][x]=null;count++}}const mult=Math.min(8,Math.pow(2,Math.max(0,phaseData.chainNo-1)));processed+=count;score+=count*100*mult;updateHUD();gravity(now);phase='gravity';phaseUntil=now+220;chain=phaseData.chainNo}
+function gravity(now){for(let x=0;x<COLS;x++){let w=ROWS-1;for(let y=ROWS-1;y>=0;y--){const c=board[y][x];if(c){if(y!==w){board[w][x]=c;board[y][x]=null;c.animY=y;c.animStart=now}w--}}}}
+function afterGravity(now){const groups=findGroups();if(groups.length)markClear(groups,now,chain+1);else{chain=0;phase='falling';checkTop();spawn()}}
+function checkTop(){for(let x=0;x<COLS;x++)if(board[0][x]){gameOver();return true}return false}
+function findBelow(x,startY){for(let y=Math.max(0,startY);y<ROWS;y++)if(board[y][x])return[x,y];return null}
+function resolveSpecial(p,now){phase='effect';phaseUntil=now+310;phaseData={type:p.type};showFx(p.type);sfxSpecial(p.type);lastSpecialType=p.type;lastSpecialAt=now;const x=p.x,y=Math.max(0,p.y);
+ if(p.type==='決裁'){if(Math.random()<.8)setSenTalk('そこは決裁で消しておいて。',2200,true);
+   let n=0;
+   for(let yy=0;yy<ROWS;yy++){
+     const c=board[yy][x];
+     if(!c)continue;
+     if(c.kind==='doc')n++;
+     board[yy][x]=null;
+   }
+   processed+=n;
+   score+=n*160+Math.max(0,n-3)*100;
+   phaseData.gravity=true;
+   updateHUD();
+ }else if(p.type==='保留'){if(Math.random()<.7)setSenTalk('一旦、保留で。',2300,false);
+   let yy=p.y;while(yy<0)yy++;if(yy>=ROWS||board[yy][x]){const t=findLandingCell(x);yy=t}if(yy>=0&&yy<ROWS&&!board[yy][x])board[yy][x]={kind:'hold',until:now+8000,animX:null,animY:null,animStart:0};
+ }else if(p.type==='却下'){if(Math.random()<.7)setSenTalk('却下で。理由は察して。',2400,false);
+   const t=findBelow(x,y);if(t){const[tx,ty]=t,c=board[ty][tx];if(c?.kind==='doc'){board[ty][tx]=null;processed++;score+=80;phaseData.gravity=true;updateHUD()}}
+ }else if(p.type==='知らん'){setSenTalk('知らん。並び、ぐちゃぐちゃで。',2700,false);
+   // 落ちた縦列の書類だけを回収し、盤面の別列へランダムにばらまく。消滅はしない。
+   const docs=[];
+   for(let yy=0;yy<ROWS;yy++){
+     const c=board[yy][x];
+     if(c?.kind==='doc'){docs.push({cell:c,fromY:yy});board[yy][x]=null;}
+   }
+   for(const item of docs.sort(()=>Math.random()-.5)){
+     const choices=[];
+     for(let xx=0;xx<COLS;xx++){const ly=findLandingCell(xx);if(ly>=0&&xx!==x)choices.push([xx,ly]);}
+     if(!choices.length){for(let xx=0;xx<COLS;xx++){const ly=findLandingCell(xx);if(ly>=0)choices.push([xx,ly]);}}
+     if(!choices.length){board[item.fromY][x]=item.cell;continue;}
+     const [tx,ty]=choices[rand(choices.length)];
+     item.cell.animX=x;item.cell.animY=item.fromY;item.cell.animStart=now;
+     board[ty][tx]=item.cell;
+   }
+   phaseUntil=now+520;phaseData.resolve=true;
+   flash.classList.remove('on');void flash.offsetWidth;flash.classList.add('on');
+ }else if(p.type==='俺は知らない'){setSenTalk('俺は知らない。横に流しといて。',2500,false);
+   const target=findBelow(x,y);const row=target?target[1]:ROWS-1;shiftRow(row,p.dir);phaseData.gravity=true;
+ }else if(p.type==='……'){if(Math.random()<.65)setSenTalk('……。止めとくか。',2200,false);
+   const cy=(findBelow(x,y)||[x,Math.min(ROWS-1,y)])[1];for(let yy=cy-1;yy<=cy+1;yy++)for(let xx=x-1;xx<=x+1;xx++){const c=board[yy]?.[xx];if(c?.kind==='doc')c.freezeUntil=now+5000}
+ }else if(p.type==='おつかれ'){slowUntil=now+6000;setSenTalk('おつかれ。ちょっとだけ楽していいよ。',2300,false)}
+}
+function findLandingCell(x){for(let y=ROWS-1;y>=0;y--)if(!board[y][x])return y;return -1}
+function shiftRow(y,dir){if(y<0||y>=ROWS)return;const old=board[y].slice(),nu=Array(COLS).fill(null);if(dir>0){for(let x=COLS-1;x>=0;x--){if(old[x]&&x+1<COLS&&!nu[x+1])nu[x+1]=old[x]}}else{for(let x=0;x<COLS;x++){if(old[x]&&x-1>=0&&!nu[x-1])nu[x-1]=old[x]}}board[y]=nu}
+function showFx(type){fxImg.src=SPECIAL_IMGS[type];fx.classList.remove('hidden');setTimeout(()=>fx.classList.add('hidden'),720)}
+function showChain(n){if(n<2)return;chainBadge.textContent=n+' CHAIN';chainBadge.classList.remove('show');void chainBadge.offsetWidth;chainBadge.classList.add('show');setTimeout(()=>chainBadge.classList.remove('show'),650)}
+function updateTimed(now){let changed=false;for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const c=board[y][x];if(c?.kind==='hold'&&now>=c.until){board[y][x]=null;changed=true}}if(changed&&phase==='falling'){/* 保留解除は盤面だけ詰める。操作中のピースは絶対に消さない。 */gravity(now);}}
+function update(dt,now){if(!running)return;if(!rulesOv.classList.contains('hidden'))return;updateLevel(now);updateBusy(now);updateTimed(now);
+ if(phase==='clear'&&now>=phaseUntil){removeClearing(now);return}
+ if(phase==='gravity'&&now>=phaseUntil){afterGravity(now);return}
+ if(phase==='effect'&&now>=phaseUntil){if(phaseData?.gravity){gravity(now);phase='gravity';phaseUntil=now+220}else if(phaseData?.resolve){beginResolve(now,1)}else{phase='falling';checkTop();spawn()}return}
+ if(phase!=='falling'||!current)return;
+ current.renderX+=(current.x-current.renderX)*Math.min(1,dt*18);
+ // 接地先へ潜り込ませない。最終マスの上で止まり、表示位置が追いついてから確定する。
+ if(collidesPiece(current,current.x,current.y+1)){
+   fallProgress=0;
+   current.renderY+=(current.y-current.renderY)*Math.min(1,dt*26);
+   if(Math.abs(current.renderY-current.y)<.025){current.renderY=current.y;lockCurrent(now)}
+   return;
+ }
+ const busyMul=busyActive?2:1,slowMul=now<slowUntil?.5:1;const speed=(1000/dropMs())*timeSpeedMul(now)*busyMul*slowMul;fallProgress+=dt*speed;
+ while(fallProgress>=1&&current){
+   if(!collidesPiece(current,current.x,current.y+1)){current.y++;fallProgress-=1}
+   else{fallProgress=0;break}
+ }
+ if(current){
+   const blocked=collidesPiece(current,current.x,current.y+1);
+   const targetY=blocked?current.y:current.y+fallProgress;
+   current.renderY+=(targetY-current.renderY)*Math.min(1,dt*24);
+ }
+}
+function drawIcon(c,im,x,y,w,h,pad=2){if(!im?.complete)return;const iw=im.naturalWidth||1,ih=im.naturalHeight||1,sc=Math.min((w-pad*2)/iw,(h-pad*2)/ih);const dw=iw*sc,dh=ih*sc;c.drawImage(im,x+(w-dw)/2,y+(h-dh)/2,dw,dh)}
+function cellPos(x,y){return[x*cw,y*ch]}
+function drawDocCell(c,x,y,now){let ry=y,rx=x;if(c.animY!=null||c.animX!=null){const t=Math.min(1,(now-c.animStart)/360),e=1-Math.pow(1-t,3);if(c.animY!=null)ry=c.animY+(y-c.animY)*e;if(c.animX!=null)rx=c.animX+(x-c.animX)*e;if(t>=1){c.animY=null;c.animX=null}}let scale=1,alpha=1;if(c.clearing){const t=Math.min(1,(now-c.clearStart)/260);scale=1-.72*t;alpha=1-t}const px=rx*cw,py=ry*ch;ctx.save();ctx.globalAlpha=alpha;ctx.translate(px+cw/2,py+ch/2);ctx.scale(scale,scale);ctx.shadowColor='rgba(37,39,43,.24)';ctx.shadowBlur=6;ctx.shadowOffsetY=4;const src=DOC_VARIANTS[c.cat][c.variant];drawIcon(ctx,IMG[src],-cw/2+1,-ch/2+1,cw-2,ch-2,1);ctx.restore();if(c.freezeUntil>now){ctx.save();ctx.globalAlpha=.42;ctx.fillStyle='#56606f';ctx.fillRect(px+6,py+6,cw-12,ch-12);ctx.restore()}}
+function drawHold(c,x,y,now){const px=x*cw,py=y*ch;ctx.save();ctx.shadowColor='rgba(37,39,43,.25)';ctx.shadowBlur=6;ctx.shadowOffsetY=4;drawIcon(ctx,IMG[SPECIAL_IMGS['保留']],px+2,py+2,cw-4,ch-4,2);ctx.restore();const f=Math.max(0,Math.min(1,(c.until-now)/8000));ctx.fillStyle='rgba(176,44,35,.92)';ctx.fillRect(px+7,py+ch-7,(cw-14)*f,4)}
+function drawBoard(now){const r=canvas.getBoundingClientRect();ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,r.width,r.height);
+ const g=ctx.createLinearGradient(0,0,r.width,0);g.addColorStop(0,'rgba(217,213,202,.82)');g.addColorStop(.5,'rgba(246,242,231,.95)');g.addColorStop(1,'rgba(217,213,202,.82)');ctx.fillStyle=g;ctx.fillRect(0,0,r.width,r.height);
+ // subtle paper-tray shadows only, no grid
+ ctx.fillStyle='rgba(64,67,72,.08)';ctx.fillRect(0,0,9,r.height);ctx.fillRect(r.width-9,0,9,r.height);ctx.fillStyle='rgba(76,52,38,.12)';ctx.fillRect(0,r.height-18,r.width,18);
+ for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const c=board[y]?.[x];if(!c)continue;if(c.kind==='doc')drawDocCell(c,x,y,now);else if(c.kind==='hold')drawHold(c,x,y,now)}
+ if(current){const ry=current.renderY,rx=current.renderX;if(current.kind==='pair'){const offs=pairOffsets(current.rot);for(let i=0;i<2;i++){const c=current.cells[i],px=(rx+offs[i][0])*cw,py=(ry+offs[i][1])*ch;if(py>-ch&&px>-cw&&px<r.width){ctx.save();ctx.shadowColor='rgba(20,22,25,.24)';ctx.shadowBlur=7;ctx.shadowOffsetY=5;drawIcon(ctx,IMG[DOC_VARIANTS[c.cat][c.variant]],px+1,py+1,cw-2,ch-2,1);ctx.restore()}}}else{const px=rx*cw,py=ry*ch;ctx.save();ctx.shadowColor='rgba(20,22,25,.28)';ctx.shadowBlur=8;ctx.shadowOffsetY=5;drawIcon(ctx,IMG[SPECIAL_IMGS[current.type]],px+1,py+1,cw-2,ch-2,1);ctx.restore()}}
+}
+function drawNext(){nctx.clearRect(0,0,next.width,next.height);nctx.fillStyle='#dce3eb';nctx.fillRect(0,0,next.width,next.height);const p=nextPiece;if(!p)return;if(p.kind==='pair'){const sz=98,cx=next.width/2,cy=next.height/2;const offs=[[0,-.56],[0,.56]];for(let i=0;i<2;i++){const c=p.cells[i],x=cx-sz/2+offs[i][0]*sz,y=cy-sz/2+offs[i][1]*sz;drawIcon(nctx,IMG[DOC_VARIANTS[c.cat][c.variant]],x,y,sz,sz,2)}}else{drawIcon(nctx,IMG[SPECIAL_IMGS[p.type]],35,35,next.width-70,next.height-70,2)}}
+
+function currentStackHeight(){for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(board[y][x])return ROWS-y;return 0}
+function pickSenLine(now){
+  const h=currentStackHeight();
+  if(busyActive)return ['繁忙期ね。はい倍速。','急ぎは急ぎで処理して。','忙しいのはみんな同じだから。','今は量で殴ってくる時期だから。','ここからが本番なんだけど。','まだ抱えられるでしょ。'][rand(6)];
+  if(h>=9)return ['もうかなり危ないけど。','その積み方で本当に合ってる？','天井見えてるよ。','崩れたら全部あなた持ちだから。','そこ、見えてないリスクあるよ。','私ならその置き方はしないかな。'][rand(6)];
+  if(level>=6&&Math.random()<.55)return ['その判断、根拠ある？','前任者はもっと早かったよ。','まだ積むんだ。勇気あるね。','詰まってから相談されてもね。','回せてるうちに回し切ろうか。','今のは悪くない。次を落とさなければ。'][rand(6)];
+  const lines=['それ、今日中だよね。','優先順位、考えた？','一旦整理してから持ってきて。','それ、誰が決めるの？','で、結局どうしたいの？','まだ余裕あるでしょ。','その書類、寝かせないで。','保留にしないで持ってきて。','その置き場で責任持てる？','積むのはいいけど、回収まで考えて。','相談前に一回自分で考えた？','雑に置くとあとで泣くよ。','今の処理、ちょっと上手かったね。','崩れなかっただけ、今日はマシ。'];
+  return lines[rand(lines.length)];
+}
+function setSenTalk(line,duration=3300,smile=false){senSpeech.textContent=line;senSpeech.classList.add('show');senTalkUntil=performance.now()+duration;if(smile)senSmileUntil=performance.now()+Math.min(1200,duration*.55)}
+function updateSen(now){
+  let mood='front';
+  if(now<senSmileUntil)mood='smile';
+  else if(current&&current.kind==='pair'){
+    const cx=pairCenterX(current);
+    if(cx<=1.4)mood='left';
+    else if(cx>=3.6)mood='right';
+    else mood='front';
+  }else if(current&&current.kind==='special'){
+    if(current.x<=1)mood='left'; else if(current.x>=4)mood='right';
+  }
+  if(mood!==senCurrentMood){senCurrentMood=mood;senImg.src=SEN_SPRITES[mood]}
+  senWrap.classList.toggle('smile',mood==='smile');
+  if(now>=senTalkUntil)senSpeech.classList.remove('show');
+  if(running&&phase!=='over'&&now>=senNextTalkAt){
+    const forceSmile=Math.random()<.12 && !busyActive;
+    setSenTalk(pickSenLine(now),3000+Math.random()*1100,forceSmile);
+    senNextTalkAt=now+8500+Math.random()*6500;
+  }
+}
+function render(now){updateSen(now);updateBonus(now);drawBoard(now)}
+function reset(){ensureAudio();resetMusicClock();board=emptyBoard();score=0;processed=0;placed=0;level=1;slowUntil=0;chain=0;piecesSinceSpecial=0;specialGap=3+rand(3);current=null;nextPiece=makePiece();running=true;phase='falling';gameStartedAt=performance.now();busyActive=false;lastSpecialType=null;lastSpecialAt=0;specialCounts={'決裁':0,'保留':0,'却下':0,'知らん':0,'俺は知らない':0,'……':0,'おつかれ':0};busyBadge.classList.add('hidden');busyCut.classList.add('hidden');bonusPop.classList.add('hidden');bonusUntil=0;bonusNextAt=bestScore+1;scoreEl.textContent='0';processedEl.textContent='0';levelEl.textContent='1';startOv.classList.add('hidden');gameOv.classList.add('hidden');senNextTalkAt=performance.now()+1400;senTalkUntil=0;senSmileUntil=0;senCurrentMood='front';senSpeech.classList.remove('show');senSpeech.textContent='';spawn()}
+function mostFrequentSpeaker(){const keys=['決裁','保留','却下','知らん','俺は知らない','……'];let best=[],max=-1;for(const k of keys){const n=specialCounts[k]||0;if(n>max){max=n;best=[k]}else if(n===max)best.push(k)}return{type:best[rand(best.length)]||'決裁',count:Math.max(0,max)}}
+function countHolds(){let n=0;for(const row of board)for(const c of row)if(c?.kind==='hold')n++;return n}
+function pickGameOverLine(now){const elapsed=gameStartedAt?now-gameStartedAt:0;if(lastSpecialType==='知らん'&&now-lastSpecialAt<3000)return'知らん。';if(lastSpecialType==='俺は知らない'&&now-lastSpecialAt<3000)return'俺は知らないって言ったよね？';if(busyActive)return Math.random()<.5?'繁忙期なのはみんな同じだから。':'忙しいを理由にしないで。';if(countHolds()>=2)return Math.random()<.5?'保留にした結果がこれです。':'検討中って、いつまで？';if(score>=18000)return'そこまでできるなら、最後までできたよね？';if(elapsed>=180000&&Math.random()<.55)return'おつかれ。じゃ、これ追加ね。';if(Math.random()<.12)return'前任者はできてたけどね。';const general=['もっと早く処理できなかった？','これ、昨日までの案件だよね？','一旦、全部整理してから持ってきて。','で、結局どうしたいの？','優先順位、考えた？'];return general[rand(general.length)]}
+function gameOver(){if(!running)return;const now=performance.now(),line=pickGameOverLine(now),speaker=mostFrequentSpeaker();running=false;current=null;phase='over';busyActive=false;busyBadge.classList.add('hidden');busyCut.classList.add('hidden');bonusPop.classList.add('hidden');sfxGameOver();setSenTalk(line,4200,false);gameOverStamp.src=SPECIAL_IMGS[speaker.type];gameOverStamp.alt=speaker.type;gameOverLine.textContent=line;speakerMeta.textContent=speaker.count>0?'最多登場スタンプ：'+speaker.type+' ×'+speaker.count:'担当スタンプ：'+speaker.type;result.textContent='SCORE '+score.toLocaleString()+'　処理 '+processed+'件　LV '+level;gameOv.classList.remove('hidden')}
+const STAMP_RULES=[
+ ['決裁','落ちた縦列を上から下まで全部処理。保留・停滞中の書類も対象。'],
+ ['保留','その場を8秒間占有。時間が来るまで邪魔をし続け、最後に消える。'],
+ ['却下','真下の通常書類を1件だけ即座に削除。ピンポイント処理。'],
+ ['知らん','落ちた縦列の書類を消さずに、盤面の別の列へランダムにばらまく。最悪。'],
+ ['俺は知らない','ぶつかった行の書類を左右どちらかへ横流し。端の書類は押し出される。'],
+ ['……','周囲3×3の通常書類を5秒間停滞させ、その間は4つ揃っても処理されない。'],
+ ['おつかれ','6秒間だけ落下速度を半分にする。繁忙期中なら実質通常速度まで戻る。']
+];
+function buildRules(){stampList.innerHTML='';for(const [name,desc] of STAMP_RULES){const row=document.createElement('div');row.className='stampRow';const im=document.createElement('img');im.src=SPECIAL_IMGS[name];im.alt=name;const text=document.createElement('div');const b=document.createElement('b');b.textContent=name;const p=document.createElement('p');p.textContent=desc;text.append(b,p);row.append(im,text);stampList.append(row)}}
+function openRules(){if(!rulesOv.classList.contains('hidden'))return;if(running)rulesPausedAt=performance.now();rulesOv.classList.remove('hidden')}
+function closeRules(){if(rulesOv.classList.contains('hidden'))return;if(running&&rulesPausedAt){const now=performance.now(),d=now-rulesPausedAt;gameStartedAt+=d;if(slowUntil)slowUntil+=d;if(phaseUntil)phaseUntil+=d;for(const row of board)for(const c of row){if(c?.until)c.until+=d;if(c?.freezeUntil)c.freezeUntil+=d;if(c?.animStart)c.animStart+=d;if(c?.clearStart)c.clearStart+=d}lastSpecialAt+=lastSpecialAt?d:0;last=now}rulesPausedAt=0;rulesOv.classList.add('hidden')}
+buildRules();
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;update(dt,now);render(now);requestAnimationFrame(loop)}requestAnimationFrame(loop);
+window.addEventListener('keydown',e=>{if(e.repeat)return;if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a'){e.preventDefault();move(-1)}else if(e.key==='ArrowRight'||e.key.toLowerCase()==='d'){e.preventDefault();move(1)}else if(e.key==='ArrowDown'||e.key.toLowerCase()==='s'){e.preventDefault();softDrop()}else if(e.key==='ArrowUp'||e.key.toLowerCase()==='w'||e.key.toLowerCase()==='x'){e.preventDefault();rotateCurrent(1)}else if(e.code==='Space'){e.preventDefault();hardDrop()}});
+document.getElementById('left').addEventListener('click',()=>move(-1));document.getElementById('right').addEventListener('click',()=>move(1));document.getElementById('down').addEventListener('click',softDrop);document.getElementById('drop').addEventListener('click',hardDrop);rotateBtn.addEventListener('click',()=>rotateCurrent(1));document.getElementById('startBtn').addEventListener('click',reset);document.getElementById('retryBtn').addEventListener('click',reset);document.getElementById('rulesBtn').addEventListener('click',openRules);document.getElementById('closeRulesBtn').addEventListener('click',closeRules);document.getElementById('soundBtn').addEventListener('click',toggleSound);document.getElementById('fullBtn').addEventListener('click',async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){}});
+senImg.src=SEN_SPRITES.front;board=emptyBoard();nextPiece=makePiece();drawNext();
+})();
+</script>
+</body></html>
